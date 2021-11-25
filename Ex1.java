@@ -9,29 +9,10 @@ import java.util.Collections;
 public class Ex1 {
 
     public static void main(String[] args) {
-		/*
-		String file_name;
-		if (args.length > 0) {
-			if (args.length != 1) {
-				throw new IllegalArgumentException("you can only enter 2 parameters");
-			}
-			else {
-
-				file_name = args[0];
-				readFile(file_name);
-
-			}
-		}
-		 */
-        //String s="alarm_net.xml";
-        //readxml(s);
 
         String s1 = "input.txt";
         readFile(s1);
-
     }
-
-
 
 
     public static void readFile(String str) {
@@ -48,8 +29,8 @@ public class Ex1 {
             int count1=0;
             int count2=0;
             String arr1[];
-            String hidden[];
-            String given[];
+            //String hidden[];
+            //String given[];
             File f=new File(str);
 
             try {
@@ -73,8 +54,8 @@ public class Ex1 {
                         }
                         s2=s1.substring(2,count);
                         s1=s1.substring(count+1);
-                        System.out.println( "s2: " +s2);
-                        System.out.println("s1: "+s1);
+                        //	System.out.println( "s2: " +s2);
+                        //	System.out.println("s1: "+s1);
                         count=0;
                         for (int i=0; i<s1.length();i++) {
                             if (s1.charAt(i)==')') {
@@ -82,14 +63,29 @@ public class Ex1 {
                             }
                             count=count+1;
                         }
+
+
+
+                        String hidden[]= {" "};
+                        String given[]= {" "};
+
                         s3=s1.substring(0,count);
                         s4=s1.substring(count+2);
-                        given=s3.split(",");
-                        hidden=s4.split("-");
-                        //System.out.println(s3);
-                        //System.out.println(s4);
-                        ///System.out.println("given: " +Arrays.toString(given));
-                        //System.out.println("hidden: "+Arrays.toString(hidden));
+                        if(s3.length()>1) {
+                            given=s3.split(",");
+
+                        }
+
+                        if(s4.length()>1) {
+                            hidden=s4.split("-");
+
+                        }
+
+                        System.out.println("given: "+s3);
+                        System.out.println("hidden: "+s4);
+                        System.out.println("hidden: "+Arrays.toString(hidden));
+                        System.out.println("given: " +Arrays.toString(given));
+
 
                         String ans=variableElimination1(s2, given,hidden,nodearr);
                         writer.println(ans);
@@ -849,7 +845,7 @@ public class Ex1 {
         String s2;
 
         ArrayList<String> givs = new ArrayList<String>();
-        if (given[0] != "") {
+        if (given[0] != " ") {
             for (int i = 0; i < given.length; i++) {
                 count1 = 0;
                 for (int j = 0; j < given[i].length(); j++) {
