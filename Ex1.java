@@ -10,148 +10,148 @@ public class Ex1 {
 
     public static void main(String[] args) {
 
-        String s1 = "input.txt";
+        String s1 = "algo2.txt";
         readFile(s1);
+
+        /*
+        * add comments to
+        * bayesballdown1
+        * bayesballup1
+        * variable elimination
+        * create mat
+        * join matrix
+        * eliminate matrix
+         */
     }
 
 
     public static void readFile(String str) {
 
         try{
+            //open  writer to file
             PrintWriter writer = new PrintWriter("output.txt", "UTF-8");
 
             ArrayList<Nodes> nodearr=new ArrayList<Nodes>();
-            String s1="";
-            String s2="";
-            String s3="";
-            String s4="";
-            int count=0;
-            int count1=0;
-            int count2=0;
-            String arr1[];
-            //String hidden[];
-            //String given[];
-            File f=new File(str);
+            String s1 = "";
+            String s2 = "";
+            String s3 = "";
+            String s4 = "";
+            int count = 0;
+            int count1 = 0;
+            int count2 = 0;
+            String arr1[] = {" "};
+            String hidden[] = {" "};
+            String given[] = {" "};
+            File f = new File(str);
 
             try {
-                Scanner s=new Scanner(f);
+                Scanner s = new Scanner(f); // open scanner to read the file
                 while (s.hasNextLine()) {
-                    String line=s.nextLine();
+                    String line = s.nextLine();
                     System.out.println(line);
                     if (line.contains("xml")) {
-                        nodearr=readxml(line);
+                        // read the xml file
+                        nodearr = readxml(line);
 
-                    }
-                    else if (line.contains("P(")){
-                        //variableElimination(line);
-                        s1=line;
-                        count=0;
-                        for (int i=0; i<s1.length();i++) {
-                            if (s1.charAt(i)=='|') {
+                    } else if (line.contains("P(")) { // this line will be variable elimination
+                        s1 = line;
+                        count = 0;
+                        // splitting the line into different parts
+                        for (int i = 0; i < s1.length(); i++) {
+                            if (s1.charAt(i) == '|') {
                                 break;
                             }
-                            count=count+1;
+                            count = count + 1;
                         }
-                        s2=s1.substring(2,count);
-                        s1=s1.substring(count+1);
+                        s2 = s1.substring(2, count);
+                        s1 = s1.substring(count + 1);
                         //	System.out.println( "s2: " +s2);
                         //	System.out.println("s1: "+s1);
-                        count=0;
-                        for (int i=0; i<s1.length();i++) {
-                            if (s1.charAt(i)==')') {
+                        count = 0;
+                        for (int i = 0; i < s1.length(); i++) {
+                            if (s1.charAt(i) == ')') {
                                 break;
                             }
-                            count=count+1;
+                            count = count + 1;
                         }
-
-
-
-                        String hidden[]= {" "};
-                        String given[]= {" "};
-
-                        s3=s1.substring(0,count);
-                        s4=s1.substring(count+2);
-                        if(s3.length()>1) {
-                            given=s3.split(",");
-
+                        //creating the arrays of given and hidden nodes
+                        s3 = s1.substring(0, count);
+                        s4 = s1.substring(count + 2);
+                        if (s3.length() > 1) {
+                            given = s3.split(",");
                         }
-
-                        if(s4.length()>1) {
-                            hidden=s4.split("-");
-
+                        if (s4.length() > 1) {
+                            hidden = s4.split("-");
                         }
+                        // System.out.println("given: "+s3);
+                        // System.out.println("hidden: "+s4);
+                        // System.out.println("hidden: "+Arrays.toString(hidden));
+                        // System.out.println("given: " +Arrays.toString(given));
 
-                        System.out.println("given: "+s3);
-                        System.out.println("hidden: "+s4);
-                        System.out.println("hidden: "+Arrays.toString(hidden));
-                        System.out.println("given: " +Arrays.toString(given));
-
-
-                        String ans=variableElimination1(s2, given,hidden,nodearr);
+                        // running the function to find the answer to the question
+                        String ans = variableElimination1(s2, given, hidden, nodearr);
+                        //printing the answer to the file
                         writer.println(ans);
-                    }
-
-                    else if (line.contains("|")){
-                        //bayseBall(line);
-                        s1=line;
-                        count=0;
-                        for (int i=0; i<s1.length();i++) {
-                            if (s1.charAt(i)=='|') {
+                    } else if (line.contains("|")) {  // this line ia a Bayse Ball question
+                        s1 = line;
+                        count = 0;
+                        for (int i = 0; i < s1.length(); i++) {
+                            if (s1.charAt(i) == '|') {
                                 break;
                             }
-                            count=count+1;
+                            count = count + 1;
                         }
-                        s2=s1.substring(0,count);
-
-                        s3=s1.substring(count);
+                        // splitting the line into different parts
+                        s2 = s1.substring(0, count);
+                        s3 = s1.substring(count);
                         //System.out.println(s3);
-                        arr1=s2.split("-");
+                        arr1 = s2.split("-");
                         //	System.out.println(Arrays.toString(arr1));
-                        count1=0;
-                        count2=0;
-                        for (int i=0; i<nodearr.size();i++) {
+                        count1 = 0;
+                        count2 = 0;
+                        //finding start and end node for Bayes ball
+                        for (int i = 0; i < nodearr.size(); i++) {
                             if (nodearr.get(i).name.equals(arr1[0])) {
                                 break;
-                            }
-                            else {
-                                count1=count1+1;
+                            } else {
+                                count1 = count1 + 1;
                             }
                         }
-                        for (int i=0; i<nodearr.size();i++) {
+                        for (int i = 0; i < nodearr.size(); i++) {
                             if (nodearr.get(i).name.equals(arr1[1])) {
                                 break;
-                            }
-                            else {
-                                count2=count2+1;
+                            } else {
+                                count2 = count2 + 1;
                             }
                         }
-                        ArrayList<Nodes> e= new ArrayList<Nodes>();
-                        if(s3.length()>1) {
-                            s3=s1.substring(count+1);
+                        // finding the given-evidence nodes
+                        ArrayList<Nodes> evidence = new ArrayList<Nodes>();
+                        if (s3.length() > 1) {
+                            s3 = s1.substring(count + 1);
                             //System.out.println("s3:" +s3);
-                            arr1=s3.split(",");
+                            arr1 = s3.split(",");
                         }
                         //System.out.println("evidence" +Arrays.toString(arr1));
-                        if (arr1[0]!="") {
-                            for (int i=0; i< arr1.length;i++) {
-                                for (int j=0; j<nodearr.size(); j++) {
-                                    // if node name more than 1 letter need to deal with that
-                                    s4=" ";
-                                    s4=String.valueOf(arr1[i].charAt(0));
-                                    boolean nse=false;
-                                    for (int k=1; k<arr1[i].length() && !nse;k++) {
+                        // going through the array and finding the evidence nodes
+                        // the boolean seen_end makes sure that we take thw whole name of the node
+                        if (arr1[0] != " ") {
+                            for (int i = 0; i < arr1.length; i++) {
+                                for (int j = 0; j < nodearr.size(); j++) {
+                                    //  s4=" ";
+                                    s4 = String.valueOf(arr1[i].charAt(0));
+                                    boolean seen_end = false;
+                                    for (int k = 1; k < arr1[i].length() && !seen_end; k++) {
                                         //System.out.println(arr1[i].charAt(k));
-                                        if (arr1[i].charAt(k)!='=') {
+                                        if (arr1[i].charAt(k) != '=') {
                                             //System.out.println(arr1[i].charAt(k));
-                                            s4+=String.valueOf(arr1[i].charAt(k));
-                                        }
-                                        else {
-                                            nse=true;
+                                            s4 += String.valueOf(arr1[i].charAt(k));
+                                        } else {
+                                            seen_end = true;
                                         }
                                     }
                                     //System.out.println("s4="+s4);
                                     if (s4.equals(nodearr.get(j).name)) {
-                                        e.add(nodearr.get(j));
+                                        evidence.add(nodearr.get(j));
                                     }
                                 }
                             }
@@ -161,22 +161,21 @@ public class Ex1 {
 						System.out.println("e:"+e.get(i).name);
 					}
 						 */
-
-                        String ans=bayesBall(nodearr.get(count1), nodearr.get(count2),e,nodearr );
+                        // running the function to find the answer to the question
+                        String ans = bayesBall(nodearr.get(count1), nodearr.get(count2), evidence, nodearr);
                         System.out.println(ans);
                         System.out.println();
-                        writer.println(ans);
-                    }
-                    else {
-
+                        writer.println(ans);  //printing the answer to the file
+                    } else {
+                        // if there is a line n the file that doesn't contain any of 3 things above we won't do anything
                     }
                 }
-                s.close();
+                s.close();  // closing the scanner
             }
             catch(Exception e){
                 System.out.println(e);
             }
-            writer.close();
+            writer.close(); // close the writer
         }
         catch(Exception e){
             System.out.println(e);
@@ -188,7 +187,6 @@ public class Ex1 {
 
         ArrayList<Nodes> nodearr = new ArrayList<Nodes>();
         File file = new File(S1);
-        //boolean first= false;
         int StrLen = 0;
         String s1 = "";
         String s2 = "";
@@ -201,39 +199,39 @@ public class Ex1 {
                 if (line.contains("<NAME>")) {
                     s2 = line;
                     StrLen = s2.length();
-                    s2 = s2.substring(7, StrLen - 7);
+                    s2 = s2.substring(7, StrLen - 7); // getting the body of the line
                     //System.out.println(s2);
-                    Nodes node1 = new Nodes(s2);
-                    nodearr.add(node1);
+                    Nodes node1 = new Nodes(s2); // creating a Nodes
+                    nodearr.add(node1); // adding the Nodes to the ArrayList of Nodes
                 }
                 if (line.contains("<OUTCOME>")) {
                     s1 = line;
                     StrLen = s1.length();
-                    s1 = s1.substring(10, StrLen - 10);
+                    s1 = s1.substring(10, StrLen - 10); // getting the body of the line
                     //System.out.println(s1);
                     for (int i = 0; i < nodearr.size(); i++) {
                         if (s2.equals(nodearr.get(i).getName())) {
-                            nodearr.get(i).outcomes.add(s1);
+                            nodearr.get(i).outcomes.add(s1); // adding the outcome to the NOdes ArrayList of outcomes
                         }
                     }
                 }
                 if (line.contains("<FOR>")) {
                     s2 = line;
                     StrLen = s2.length();
-                    s2 = s2.substring(6, StrLen - 6);
+                    s2 = s2.substring(6, StrLen - 6); // getting the body of the line this is the Nodes
                     //System.out.println(s2);
                 }
                 if (line.contains("<GIVEN>")) {
                     s1 = line;
                     StrLen = s1.length();
-                    s1 = s1.substring(8, StrLen - 8);
+                    s1 = s1.substring(8, StrLen - 8); // getting the body of the line
                     //System.out.println(s1);
                     for (int i = 0; i < nodearr.size(); i++) {
                         if (s2.equals(nodearr.get(i).getName())) { //for
                             for (int j = 0; j < nodearr.size(); j++) {
                                 if (s1.equals(nodearr.get(j).getName())) { //given
-                                    nodearr.get(i).parents.add(nodearr.get(j));
-                                    nodearr.get(j).kids.add(nodearr.get(i));
+                                    nodearr.get(i).parents.add(nodearr.get(j)); // adding the given Nodes as Parents to the for Nodes
+                                    nodearr.get(j).kids.add(nodearr.get(i)); // adding the for Nodes as kids to the given Nodes
                                 }
                             }
                         }
@@ -242,21 +240,21 @@ public class Ex1 {
                 if (line.contains("<TABLE>")) {
                     s1 = line;
                     StrLen = s1.length();
-                    s1 = s1.substring(8, StrLen - 8);
+                    s1 = s1.substring(8, StrLen - 8); // getting the body of the line
                     //System.out.println(s1);
-                    String[] arr = s1.split(" ");
+                    String[] arr = s1.split(" "); // creating an array of the values
                     //System.out.println(Arrays.toString(arr));
                     for (int i = 0; i < nodearr.size(); i++) {
                         if (s2.equals(nodearr.get(i).getName())) {
                             for (int j = 0; j < arr.length; j++) {
-                                x = Double.valueOf(arr[j]);
-                                nodearr.get(i).percents.add(x);
+                                x = Double.valueOf(arr[j]); // turning the double into a string
+                                nodearr.get(i).percents.add(x); // adding the value to the Nodes percent ArrayList
                             }
                         }
                     }
                 }
             }
-            s.close();
+            s.close(); // close the scanner
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -269,44 +267,35 @@ public class Ex1 {
 
 
 
-    /*
-     * bayes ball algorithm
-     * parent can only go to grand kids if the child is unseen.
-     * parent can only go to other parent if the child is seen.
-     * child can to anyone if parent is unseen.
-     * child can't go any where if parent is seen.
-     * if you can't reach the node it is conditionally independent of the start node.
-     *
-     */
+
 
 
     public static String bayesBall(Nodes n1, Nodes n2, ArrayList<Nodes> evidence, ArrayList<Nodes> nodesarr) {
-
         String S1 = "yes";
         String S2 = "no";
-        boolean seenE = false;
+        boolean seenEvidence = false;
         boolean ans = false;
-        ArrayList<Boolean> isdependent = new ArrayList<Boolean>();
+        ArrayList<Boolean> isIndependent = new ArrayList<Boolean>();
         // mark the nodes as seen
         if (evidence.size() > 0) {
             for (int i = 0; i < evidence.size(); i++) {
                 evidence.get(i).setSeen(true);
             }
         }
+        //make sure that the state of all the nodes is 0
         for (int i = 0; i < nodesarr.size(); i++) {
             nodesarr.get(i).setState(0);
         }
 
-        boolean hasBeenSeen = false;
-        bayesBalldown1(n1, n2, isdependent, seenE, hasBeenSeen);
+        boolean hasBeenSeen = false; // if we have seen a seen node
+        bayesBalldown1(n1, n2, isIndependent, seenEvidence, hasBeenSeen);
 
+        //make sure that the state of all the nodes is 0
         for (int i = 0; i < nodesarr.size(); i++) {
             nodesarr.get(i).setState(0);
         }
+        bayesBallup1(n1, n2, isIndependent, seenEvidence, hasBeenSeen);
 
-
-        bayesBallup1(n1, n2, isdependent, seenE, hasBeenSeen);
-        //System.out.println("isdepndent: "+ isdependent) ;
 
         // mark the nodes as unseen
         if (evidence.size() > 0) {
@@ -314,169 +303,49 @@ public class Ex1 {
                 evidence.get(i).setSeen(false);
             }
         }
-        for (int i = 0; i < isdependent.size(); i++) {
-            if (isdependent.get(i) == true) {
+        // go through the ArrayList of values, if 1 of them is true,
+        // than there is a path between the nodes, and the nodes are not independent
+        for (int i = 0; i < isIndependent.size(); i++) {
+            if (isIndependent.get(i) == true) {
                 ans = true;
             }
         }
-        for (int i = 0; i < nodesarr.size(); i++) {
-            //System.out.print(nodesarr.get(i).getName()+"=state:"+nodesarr.get(i).getState()+" , ");
-        }
-        //System.out.println();
+
         if (ans == true) {
             return S2;
         } else {
             return S1;
         }
-
     }
 
-
-	/*
-	public static void bayesBalldown(Nodes n1, Nodes n2,ArrayList<Boolean>isdependent, boolean seenE) {
-
-		if (n1.state!=2) {
-			n1.setState(1);
-			if (n1.equals(n2)) {
-				isdependent.add(true);
-			}
-			for (int i=0; i< n1.kids.size(); i++) {
-				if (i==n1.kids.size()-1) {
-					n1.setState(2);
-				}
-				if (n1.kids.get(i).equals(n2)) {
-					isdependent.add(true);
-					break;
-				}
-				else if (n1.kids.get(i).seen==false) {
-					seenE=false;
-					bayesBalldown(n1.kids.get(i) ,n2,isdependent,seenE);
-					//bayesBallup(n1.kids.get(i) ,n2,isdependent,seenE);
-				}
-				else{
-					seenE=true;
-					for (int j=0; j< n1.kids.get(i).parents.size(); j++) {
-						if (j==n1.kids.get(i).parents.size()) {
-							n1.kids.get(i).setState(2);
-						}
-						if (n1.kids.get(i).parents.get(j).getName().equals(n1.getName())) {
-							if (n1.parents.size()>1) {
-								for (int k=0; k< n1.parents.size();k++) {
-									if (n1.parents.get(k).getState()<2) {
-										seenE=false;
-										bayesBallup(n1.parents.get(k) ,n2,isdependent,seenE);
-									}
-								}
-							}
-							else if(n1.kids.get(i).parents.size()>1) {
-								for (int k=0;k<n1.kids.get(i).parents.size();k++) {
-									seenE=false;
-									bayesBallup(n1.kids.get(i).parents.get(k) ,n2,isdependent,seenE);
-								}
-							}
-							else {
-								isdependent.add(false);
-								break;
-							}
-						}
-
-						if (n1.kids.get(i).parents.get(j).seen==false) {
-							if (n1.kids.get(i).parents.get(j).equals(n2)) {
-								isdependent.add(true);
-								break;
-							}
-							if (n1.kids.get(i).parents.get(j).equals(n1)) {
-								//isdependent.add(true);
-								break;
-							}
-							else {
-								seenE=false;
-								bayesBallup(n1.kids.get(i).parents.get(j),n2,isdependent,seenE);
-							}
-						}
-						else {
-							isdependent.add(false);
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-
-	public static void bayesBallup(Nodes n1, Nodes n2,ArrayList<Boolean>isdependent, boolean seenE){
-		if (n1.state!=2) {
-			n1.setState(1);
-			if (n1.equals(n2)) {
-				isdependent.add(true);
-			}
-			for (int i=0; i< n1.parents.size(); i++) {
-				if (i==n1.parents.size()-1) {
-					n1.setState(2);
-				}
-				if (n1.parents.get(i).equals(n2)) {
-					isdependent.add(true);
-					break;
-				}
-				else if (n1.parents.get(i).seen==false) {
-					seenE=false;
-					for (int j=0; j<n1.parents.get(i).kids.size();j++) {
-						if (n1.parents.get(i).kids.get(j)==n2) {
-							isdependent.add(true);
-						}
-						else if (n1.parents.get(i).kids.get(j)!=n1) {
-							bayesBalldown(n1.parents.get(i) ,n2,isdependent,seenE);
-						}
-						else {
-							bayesBallup(n1.parents.get(i) ,n2,isdependent,seenE);
-						}
-					}
-				}
-				else {
-					for (int j=0; j< n1.parents.get(i).kids.size(); j++) {
-						if (j==n1.parents.get(i).kids.size()) {
-							n1.parents.get(i).setState(2);
-						}
-						if (n1.parents.get(i).kids.get(j).equals(n1)){
-							isdependent.add(false);
-							break;
-						}
-						if (n1.parents.get(i).kids.get(j).seen==false) {
-							if (n1.parents.get(i).kids.get(j).equals(n2)) {
-								isdependent.add(true);
-								break;
-							}
-							else {
-								seenE=false;
-								bayesBalldown(n1.parents.get(i).kids.get(j),n2,isdependent,seenE);
-							}
-						}
-						else {
-							isdependent.add(false);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	 */
+    /*
+     * bayes ball algorithm
+     * if you are coming from above and the node you are going to is not seen, you have to continue to go down.
+     * if you are coming from above and the node you are going to is seen, then you can only go to the parents of the seen node,
+     * and can't go back to where you came from.
+     * if you are coming from below and the node you are going to is not seen, you up to a parent of the node,
+     * or down to a kid of the node(not back to himself)
+     * if you are coming from below and the node you are going to is seen, you can't go anywhere.
+     *
+     * my algorithm is recursive and goes till it stops than goes to where it last stopped till if finishes checking everywhere it can go,
+     * with the rules above.
+     *
+     * we will run the algorithm twice, once starting going down and next starting going up.(this is done in the BayesBall function)
+     */
 
 
     public static void bayesBalldown1(Nodes n1, Nodes n2, ArrayList<Boolean> isdependent, boolean seenE, boolean hasBeenSeen) {
-        boolean breeaak = false;
+        boolean breeaak = false; // we will use this when we find the node in the middle of loop
         if (n1.equals(n2)) {
-            isdependent.add(true);
+            isdependent.add(true); // we found the node
         }
-
         if (n1.state != 2) {
             n1.setState(1);
             //if(n1.kids.size()>=1) {
             for (int i = 0; i < n1.kids.size(); i++) {
-                // mark that weve finished with nide
+                // mark that we've finished with node
                 if (i == n1.kids.size() - 1) {
-                    n1.setState(2);
+                    n1.setState(2); // this is the last kid mark that we are done with this node
                 }
                 // what we wre looking for
                 if (n1.kids.get(i).equals(n2)) {
@@ -490,69 +359,48 @@ public class Ex1 {
                     bayesBalldown1(n1.kids.get(i), n2, isdependent, seenE, hasBeenSeen);
                 }
 
-                // not what we are looking for, not seen but we have seen before can go up or down
+                // not what we are looking for, not seen but, we have seen before can go down
                 else if (n1.kids.get(i).seen == false && hasBeenSeen) {
                     seenE = false;
                     if (n1.kids.get(i).state != 2) {
                         bayesBalldown1(n1.kids.get(i), n2, isdependent, seenE, hasBeenSeen);
                     }
-					/*
-					for (int k=0;k<n1.parents.size();k++) {
-						if(k==n1.parents.size()-1) {
-							n1.setState(2);
-						}
-						// what we are looking for
-						if(n1.parents.get(k).equals(n2)) {
-							isdependent.add(true);
-							breeaak=true;
-							break;
-						}
-						// the parent is seen cant continue;
-						else if(n1.kids.get(i).parents.get(k).seen==true) {
-							isdependent.add(false);
-							//break;
-						}
-						else {
-							seenE=false;
-							if(n1.parents.get(i).state!=2)
-								bayesBallup1(n1.parents.get(i),n2,isdependent,seenE,hasBeenSeen);
-						}
-					}
-					 */
-                } else {
+                }
+            else {
                     // not what we are looking for, has been seen can only go up.
                     seenE = true;
                     hasBeenSeen = true;
                     for (int j = 0; j < n1.kids.get(i).parents.size(); j++) {
-                        if (breeaak) {
+                        if (breeaak) { //if before we've got true we don't need to do this
                             break;
                         }
                         // the only parent is where we came from
                         if (n1.kids.get(i).parents.size() == 1) {
                             n1.setState(2);
                             for (int k = 0; k < n1.parents.size(); k++) {
-                                if (breeaak) {
+                                if (breeaak) { //if before we've got true we don't need to do this
                                     break;
                                 }
                                 if (k == n1.parents.size() - 1) {
-                                    n1.setState(2);
+                                    n1.setState(2); // this is the last parent mark that we are done with this node
                                 }
                                 if (n1.parents.get(k).equals(n2)) {
                                     isdependent.add(true);
                                     breeaak = true;
                                     break;
                                 }
+                                // the parent is seen cant continue;
                                 if (n1.parents.get(k).seen == true) {
-                                    isdependent.add(false);
+                                    isdependent.add(false); // can't go anywhere
                                 }
                             }
                         }
                         if (breeaak) {
-                            break;
+                            break; //if before we've got true we don't need to do this
                         }
-                        // gone through all the parents
+
                         if (j == n1.kids.get(i).parents.size()) {
-                            n1.setState(2);
+                            n1.setState(2); // this is the last parent mark that we are done with this node
                         }
                         // the parent is n2
                         if (n1.kids.get(i).parents.get(j).equals(n2)) {
@@ -561,10 +409,9 @@ public class Ex1 {
                         }
                         // the parent is seen cant continue;
                         else if (n1.kids.get(i).parents.get(j).seen == true) {
-                            isdependent.add(false);
+                            isdependent.add(false); // can't go anywhere
                             //break;
                         } else {
-
                             // not what we are looking for go up and down to continue looking
                             if (n1.kids.get(i).parents.get(j).state != 2) {
                                 seenE = false;
@@ -1038,7 +885,7 @@ public class Ex1 {
         }
     }
 
-
+/*
     public static boolean need_to_create_new_mat(Object[][] mat) {
         boolean redo = false;
         int columns = mat[0].length;
@@ -1049,7 +896,7 @@ public class Ex1 {
         }
         return redo;
     }
-
+*/
 
     public static Object[][] get_rid_of_mid_columns(Object[][] mat) {
         int col = mat[0].length - 1;
@@ -1057,6 +904,11 @@ public class Ex1 {
         if (col > 1) {
             int count_row = 0;
             int count_col = 0;
+            // start filling in the non-null values from the original mat
+            // as we fill in the values we will make the count-col bigger
+            // if it gets bugger or equals col we will change to 0
+            // and make the count_row bigger
+
             Object[][] new_mat = new Object[row][col];
             for (int j = 0; j < mat.length; j++) { //row
                 for (int i = 0; i < mat[0].length; i++) { //column
@@ -1072,35 +924,12 @@ public class Ex1 {
             }
             return new_mat;
         } else {
+            // if there is only 1 column then we have no node
             return null;
         }
-		/*int rows=mat.length;
-		int columns=mat[0].length-1;
-		if (columns>1) {
-			Object [][] mat1= new Object [rows][columns] ;
-			for (int i=0; i<columns+1;i++) {
-				if (mat[0][i]!=null) {
-					if (i<columns) {
-						for (int j=0; j<rows; j++) {
-							mat1[j][i]=mat[j][i];
-						}
-					}
-					else {
-						for (int j=0; j<rows; j++) {
-							mat1[j][i-1]=mat[j][i];
-						}
-					}
-				}
-			}
-			return mat1;
-		}
-		else {
-			return null;
-		}
-		 */
     }
 
-
+/*
     public static Object[][] get_rid_of_rows(Object[][] mat, String s1, String s2) {
         int rows = mat.length;
         int columns = mat[0].length;
@@ -1122,13 +951,17 @@ public class Ex1 {
 
         return null;
     }
-
+*/
 
     public static Object[][] make_smaller(Object[][] mat, int col, int row) {
         if (col > 1) {
             int count_row = 0;
             int count_col = 0;
             Object[][] new_mat = new Object[row][col];
+            // start filling in the non-null values from the original mat
+            // as we fill in the values we will make the count-col bigger
+            // if it gets bugger or equals col we will change to 0
+            // and make the count_row bigger
             for (int j = 0; j < mat.length; j++) { //row
                 for (int i = 0; i < mat[0].length; i++) { //column
                     if (mat[j][i] != null) {
@@ -1143,6 +976,7 @@ public class Ex1 {
             }
             return new_mat;
         } else {
+            // if there is only 1 column then we have no node
             return null;
         }
     }
@@ -1389,6 +1223,7 @@ public class Ex1 {
     public static boolean ancestor(Nodes start, Nodes end, ArrayList<Nodes> nodearr) {
         ArrayList<Boolean> ans = new ArrayList<Boolean>();
         is_ancestor(start, end, nodearr, ans);
+       // if the arrayList has the boolean true then end is an ancestor of start.
         boolean answer = false;
         for (int i = 0; i < ans.size(); i++) {
             if (ans.get(i).equals(true)) {
@@ -1401,12 +1236,13 @@ public class Ex1 {
 
 
     public static void is_ancestor(Nodes start, Nodes end, ArrayList<Nodes> nodearr, ArrayList<Boolean> ans) {
-        if (start.parents.size() < 1)
-            ans.add(false);
+        if (start.parents.size() < 1) // if start has no parents end can't be an ancestor
+            ans.add(false); // we didn't find an ancestor we will add false to the arraylist
         else {
+            // recursively call this function till we get to the tops of the graph
             for (int i = 0; i < start.parents.size(); i++) {
                 if (start.parents.get(i).equals(end)) {
-                    ans.add(true);
+                    ans.add(true); // we found an ancestor we will add true to the arraylist
                 } else {
                     is_ancestor(start.parents.get(i), end, nodearr, ans);
                 }
@@ -1417,13 +1253,14 @@ public class Ex1 {
 
     public static Node_mat get_rid_of_cols(Object[][] mat, String val) {
         int col = 0;
+        //find the column that we wnat to get rid of
         for (int i = 0; i < mat[0].length - 1; i++) {
             if (mat[0][i].equals(val)) {
                 col = i;
             }
         }
         for (int i = 0; i < mat.length; i++) {
-            mat[i][col] = null;
+            mat[i][col] = null; // turn all the values of the column to null
         }
         Object[][] new_mat = get_rid_of_mid_columns(mat);
         if (new_mat == null) {
