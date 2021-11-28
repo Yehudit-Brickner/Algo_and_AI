@@ -12,7 +12,6 @@ public class Ex1 {
 
         String s1 = "input.txt";
         readFile(s1);
-
     }
 
 
@@ -41,16 +40,10 @@ public class Ex1 {
                     String line = s.nextLine();
                     System.out.println(line);
                     if (line.contains("xml")) {
-                        try {
                             // read the xml file
                             nodearr = readxml(line);
-                        }
-                        catch(Exception e){
-                            System.out.println("problem with xml file");
-                        }
-
                     } else if (line.contains("P(")) { // this line will be variable elimination
-                        try {
+                        String ans=" ";
                             s1 = line;
                             count = 0;
                             // splitting the line into different parts
@@ -78,17 +71,18 @@ public class Ex1 {
                             if (s4.length() > 1) {
                                 hidden = s4.split("-");
                             }
-
-                            // running the function to find the answer to the question
-                            String ans = variableElimination1(s2, given, hidden, nodearr);
+                            try {
+                                // running the function to find the answer to the question
+                                ans = variableElimination1(s2, given, hidden, nodearr);
+                            }
+                            catch (Exception e){
+                                ans=" ";
+                        }
                             //printing the answer to the file
                             writer.println(ans);
-                        }
-                        catch (Exception e){
-                            System.out.println("problem with the line");
-                        }
-                    } else if (line.contains("|")) {  // this line ia a Bayse Ball question
-                        try {
+                    }
+                    else if (line.contains("|")) {  // this line ia a Bayse Ball question
+                       String ans=" ";
                             s1 = line;
                             count = 0;
                             for (int i = 0; i < s1.length(); i++) {
@@ -154,15 +148,17 @@ public class Ex1 {
 					}
 						 */
                             // running the function to find the answer to the question
-                            String ans = bayesBall(nodearr.get(count1), nodearr.get(count2), evidence, nodearr);
+                        try {
+                            ans = bayesBall(nodearr.get(count1), nodearr.get(count2), evidence, nodearr);
                             System.out.println(ans);
+                        }
+                        catch (Exception e) {
+                            ans = " ";
+                        }
                             System.out.println();
                             writer.println(ans);  //printing the answer to the file
-                        }
-                        catch (Exception e){
-                            System.out.println("problem with the line");
-                        }
-                    } else {
+                    }
+                    else {
                         // if there is a line n the file that doesn't contain any of 3 things above we won't do anything
                     }
                 }
