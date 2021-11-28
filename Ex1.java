@@ -12,7 +12,7 @@ public class Ex1 {
 
         String s1 = "input.txt";
         readFile(s1);
-        
+
     }
 
 
@@ -41,122 +41,137 @@ public class Ex1 {
                     String line = s.nextLine();
                     System.out.println(line);
                     if (line.contains("xml")) {
-                        // read the xml file
-                        nodearr = readxml(line);
+                        try {
+                            // read the xml file
+                            nodearr = readxml(line);
+                        }
+                        catch(Exception e){
+                            System.out.println("problem with xml file");
+                        }
 
                     } else if (line.contains("P(")) { // this line will be variable elimination
-                        s1 = line;
-                        count = 0;
-                        // splitting the line into different parts
-                        for (int i = 0; i < s1.length(); i++) {
-                            if (s1.charAt(i) == '|') {
-                                break;
+                        try {
+                            s1 = line;
+                            count = 0;
+                            // splitting the line into different parts
+                            for (int i = 0; i < s1.length(); i++) {
+                                if (s1.charAt(i) == '|') {
+                                    break;
+                                }
+                                count = count + 1;
                             }
-                            count = count + 1;
-                        }
-                        s2 = s1.substring(2, count);
-                        s1 = s1.substring(count + 1);
-                        //	System.out.println( "s2: " +s2);
-                        //	System.out.println("s1: "+s1);
-                        count = 0;
-                        for (int i = 0; i < s1.length(); i++) {
-                            if (s1.charAt(i) == ')') {
-                                break;
+                            s2 = s1.substring(2, count);
+                            s1 = s1.substring(count + 1);
+                            //	System.out.println( "s2: " +s2);
+                            //	System.out.println("s1: "+s1);
+                            count = 0;
+                            for (int i = 0; i < s1.length(); i++) {
+                                if (s1.charAt(i) == ')') {
+                                    break;
+                                }
+                                count = count + 1;
                             }
-                            count = count + 1;
-                        }
-                        //creating the arrays of given and hidden nodes
-                        s3 = s1.substring(0, count);
-                        s4 = s1.substring(count + 2);
-                        if (s3.length() > 1) {
-                            given = s3.split(",");
-                        }
-                        if (s4.length() > 1) {
-                            hidden = s4.split("-");
-                        }
-                        // System.out.println("given: "+s3);
-                        // System.out.println("hidden: "+s4);
-                        // System.out.println("hidden: "+Arrays.toString(hidden));
-                        // System.out.println("given: " +Arrays.toString(given));
+                            //creating the arrays of given and hidden nodes
+                            s3 = s1.substring(0, count);
+                            s4 = s1.substring(count + 2);
+                            if (s3.length() > 1) {
+                                given = s3.split(",");
+                            }
+                            if (s4.length() > 1) {
+                                hidden = s4.split("-");
+                            }
+                            // System.out.println("given: "+s3);
+                            // System.out.println("hidden: "+s4);
+                            // System.out.println("hidden: "+Arrays.toString(hidden));
+                            // System.out.println("given: " +Arrays.toString(given));
 
-                        // running the function to find the answer to the question
-                        String ans = variableElimination1(s2, given, hidden, nodearr);
-                        //printing the answer to the file
-                        writer.println(ans);
+                            // running the function to find the answer to the question
+                            String ans = variableElimination1(s2, given, hidden, nodearr);
+                            //printing the answer to the file
+                            writer.println(ans);
+                        }
+                        catch (Exception e){
+                            System.out.println("problem with the line");
+                        }
                     } else if (line.contains("|")) {  // this line ia a Bayse Ball question
-                        s1 = line;
-                        count = 0;
-                        for (int i = 0; i < s1.length(); i++) {
-                            if (s1.charAt(i) == '|') {
-                                break;
+                        try {
+                            s1 = line;
+                            count = 0;
+                            for (int i = 0; i < s1.length(); i++) {
+                                if (s1.charAt(i) == '|') {
+                                    break;
+                                }
+                                count = count + 1;
                             }
-                            count = count + 1;
-                        }
-                        // splitting the line into different parts
-                        s2 = s1.substring(0, count);
-                        s3 = s1.substring(count);
-                        //System.out.println(s3);
-                        arr1 = s2.split("-");
-                        //	System.out.println(Arrays.toString(arr1));
-                        count1 = 0;
-                        count2 = 0;
-                        //finding start and end node for Bayes ball
-                        for (int i = 0; i < nodearr.size(); i++) {
-                            if (nodearr.get(i).name.equals(arr1[0])) {
-                                break;
-                            } else {
-                                count1 = count1 + 1;
+                            // splitting the line into different parts
+                            s2 = s1.substring(0, count);
+                            s3 = s1.substring(count);
+                            //System.out.println(s3);
+                            arr1 = s2.split("-");
+                            //	System.out.println(Arrays.toString(arr1));
+                            count1 = 0;
+                            count2 = 0;
+                            //finding start and end node for Bayes ball
+                            for (int i = 0; i < nodearr.size(); i++) {
+                                if (nodearr.get(i).name.equals(arr1[0])) {
+                                    break;
+                                } else {
+                                    count1 = count1 + 1;
+                                }
                             }
-                        }
-                        for (int i = 0; i < nodearr.size(); i++) {
-                            if (nodearr.get(i).name.equals(arr1[1])) {
-                                break;
-                            } else {
-                                count2 = count2 + 1;
+                            for (int i = 0; i < nodearr.size(); i++) {
+                                if (nodearr.get(i).name.equals(arr1[1])) {
+                                    break;
+                                } else {
+                                    count2 = count2 + 1;
+                                }
                             }
-                        }
-                        // finding the given-evidence nodes
-                        ArrayList<Nodes> evidence = new ArrayList<Nodes>();
-                        if (s3.length() > 1) {
-                            s3 = s1.substring(count + 1);
-                            //System.out.println("s3:" +s3);
-                            arr1 = s3.split(",");
-                        }
-                        //System.out.println("evidence" +Arrays.toString(arr1));
-                        // going through the array and finding the evidence nodes
-                        // the boolean seen_end makes sure that we take thw whole name of the node
-                        if (arr1[0] != " ") {
-                            for (int i = 0; i < arr1.length; i++) {
-                                for (int j = 0; j < nodearr.size(); j++) {
-                                    //  s4=" ";
-                                    s4 = String.valueOf(arr1[i].charAt(0));
-                                    boolean seen_end = false;
-                                    for (int k = 1; k < arr1[i].length() && !seen_end; k++) {
-                                        //System.out.println(arr1[i].charAt(k));
-                                        if (arr1[i].charAt(k) != '=') {
+                            // finding the given-evidence nodes
+                            ArrayList<Nodes> evidence = new ArrayList<Nodes>();
+                            if (s3.length() > 1) {
+                                s3 = s1.substring(count + 1);
+                                //System.out.println("s3:" +s3);
+                                arr1 = s3.split(",");
+                            }
+                            //System.out.println("evidence" +Arrays.toString(arr1));
+                            // going through the array and finding the evidence nodes
+                            // the boolean seen_end makes sure that we take thw whole name of the node
+                            if (arr1[0] != " ") {
+                                for (int i = 0; i < arr1.length; i++) {
+                                    for (int j = 0; j < nodearr.size(); j++) {
+                                        //  s4=" ";
+                                        s4 = String.valueOf(arr1[i].charAt(0));
+                                        boolean seen_end = false;
+                                        for (int k = 1; k < arr1[i].length() && !seen_end; k++) {
                                             //System.out.println(arr1[i].charAt(k));
-                                            s4 += String.valueOf(arr1[i].charAt(k));
-                                        } else {
-                                            seen_end = true;
+                                            if (arr1[i].charAt(k) != '=') {
+                                                //System.out.println(arr1[i].charAt(k));
+                                                s4 += String.valueOf(arr1[i].charAt(k));
+                                            } else {
+                                                seen_end = true;
+                                            }
                                         }
-                                    }
-                                    //System.out.println("s4="+s4);
-                                    if (s4.equals(nodearr.get(j).name)) {
-                                        evidence.add(nodearr.get(j));
+                                        //System.out.println("s4="+s4);
+                                        if (s4.equals(nodearr.get(j).name)) {
+                                            evidence.add(nodearr.get(j));
+                                        }
                                     }
                                 }
                             }
-                        }
 						/*	System.out.println("size of e:" +e.size());
 					for (int i=0; i<e.size(); i++) {
 						System.out.println("e:"+e.get(i).name);
 					}
 						 */
-                        // running the function to find the answer to the question
-                        String ans = bayesBall(nodearr.get(count1), nodearr.get(count2), evidence, nodearr);
-                        System.out.println(ans);
-                        System.out.println();
-                        writer.println(ans);  //printing the answer to the file
+                            // running the function to find the answer to the question
+                            String ans = bayesBall(nodearr.get(count1), nodearr.get(count2), evidence, nodearr);
+                            System.out.println(ans);
+                            System.out.println();
+                            writer.println(ans);  //printing the answer to the file
+                        }
+                        catch (Exception e){
+                            System.out.println("problem with the line");
+                        }
                     } else {
                         // if there is a line n the file that doesn't contain any of 3 things above we won't do anything
                     }
