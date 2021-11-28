@@ -10,13 +10,9 @@ public class Ex1 {
 
     public static void main(String[] args) {
 
-        String s1 = "algo2.txt";
+        String s1 = "input.txt";
         readFile(s1);
-
-        /*
-        * add comments to
-        * join matrix
-         */
+        
     }
 
 
@@ -396,12 +392,10 @@ public class Ex1 {
                         // the parent is n2
                         if (n1.kids.get(i).parents.get(j).equals(n2)) {
                             isdependent.add(true);
-                            //break;
                         }
                         // the parent is seen cant continue;
                         else if (n1.kids.get(i).parents.get(j).seen == true) {
                             isdependent.add(false); // can't go anywhere
-                            //break;
                         } else {
                             // not what we are looking for go up and down to continue looking
                             if (n1.kids.get(i).parents.get(j).state != 2) {
@@ -487,10 +481,7 @@ public class Ex1 {
         String Qwry = s.substring(0, count1 - 1);
         String val=s.substring(count1);
         System.out.println("QWRY: " + Qwry + " val:  "+ val); // print the name of that node
-        //	System.out.println("main node:" +s);
-        //	System.out.println("hidden: "+Arrays.toString(hidden));
-        //	System.out.println("given: "+Arrays.toString(given));
-        //	System.out.println();
+
 
         int mult = 0; // this variable will save the count of multiplications we do
         int add = 0; // this variable will save the count of additions we do
@@ -538,7 +529,6 @@ public class Ex1 {
             }
             double last = 0;
             Object[][] finale_mat = mats.get(0).getMat();
-           // String val = s.substring(count1 + 1);
             for (int i = 1; i < finale_mat.length; i++) {
                 if (finale_mat[i][0].equals(val)) { // find the value of the truth val in the mat, last=its percent
                     last = (Double) finale_mat[i][finale_mat[0].length - 1];
@@ -567,12 +557,10 @@ public class Ex1 {
         int count = 0;
         for (int k = 0; k < hidden.length; k++) { // go through the array of the names of nodes we need to eliminate
             hidden_mats.clear(); // we will clear the arrayList, because we are now adding new values and dont need the pld ones
-           // count = 0;
             for (int i = 0; i < mats.size(); i++) { // go through the ArrayList mats
                 for (int l = 0; l < mats.get(i).mat[0].length; l++) { // go through the column names of the matrix
                     if (mats.get(i).mat[0][l].equals(hidden[k])) { // if the column name equals the name of the variable we are looking for
                         hidden_mats.add(mats.get(i)); // we will add the node_mat to the hidden_mat Arraylist
-                      //  count = count + 1;
                     }
                 }
             }
@@ -613,21 +601,6 @@ public class Ex1 {
                 // that because when you add x numbers together you use x-1 addition signs
             }
         }
-        //System.out.println("mult=" + mult + " add= " +add +"\n"+ mats);
-
-
-
-        /*
-        String v = "";
-        count = 0;
-        for (int i = 0; i < s.length(); i++) {
-            count = count + 1;
-            if (s.charAt(i) == '=') {
-                break;
-            }
-        }
-        v = s.substring(0, count - 1);
-*/
         // we have eliminated all the hidden values
         while (mats.size() > 1) { // if mats has more than 1 mat on i we need to join by the qwry node
             Collections.sort(mats, comp); // sort the arrayList
@@ -650,20 +623,6 @@ public class Ex1 {
         add = add - 1; // lower the count by 1 because we counted it too many times
         last = 1.0 / last; // take 1.0 and divide by last so that we get are normalizer
 
-/*
-        count1 = s.length();
-        for (int i = s.length() - 1; i >= 0; i--) {
-            count1 = count1 - 1;
-            if (s.charAt(i) == '=') {
-                break;
-            }
-        }
-        //String val = s.substring(count1 + 1);
-         //val = s.substring(count1 + 1);
-
-        //	System.out.println("val: " + val);
-        */
-
 
         for (int i = 1; i < finale_mat.length; i++) {
             if (finale_mat[i][0].equals(val)) { // go through the mats row to find the value we are looking for
@@ -671,7 +630,6 @@ public class Ex1 {
             }
         }
         last = (double) Math.round(last * 100000d) / 100000d; // round the number to 5 spots after the decimal point
-        //System.out.println(last);
         System.out.println("mult=" + mult + " add= " + add + " final ans: " + last);
         System.out.println();
         String ans = last + "," + add + "," + mult; // we will return a string with its percent and addition and multiplication counters
@@ -888,18 +846,6 @@ public class Ex1 {
         }
     }
 
-/*
-    public static boolean need_to_create_new_mat(Object[][] mat) {
-        boolean redo = false;
-        int columns = mat[0].length;
-        for (int i = 0; i < columns; i++) {
-            if (mat[0][i] == null) {
-                redo = true;
-            }
-        }
-        return redo;
-    }
-*/
 
     public static Object[][] get_rid_of_mid_columns(Object[][] mat) {
         int col = mat[0].length - 1;
@@ -932,29 +878,6 @@ public class Ex1 {
         }
     }
 
-/*
-    public static Object[][] get_rid_of_rows(Object[][] mat, String s1, String s2) {
-        int rows = mat.length;
-        int columns = mat[0].length;
-        int i = 0;
-        int count = 0;
-        for (i = 0; i < columns; i++) {
-            if (mat[0][i] == s1) {
-                break;
-            }
-        }
-        for (int j = 1; j < rows; j++) {
-            if (mat[i][j] == s2) {
-                count = count + 1;
-            }
-        }
-        int rows1 = rows - count;
-        int columns1 = columns - 1;
-        Object[][] mat1 = new Object[rows1][columns1];
-
-        return null;
-    }
-*/
 
     public static Object[][] make_smaller(Object[][] mat, int col, int row) {
         if (col > 1) {
@@ -987,7 +910,6 @@ public class Ex1 {
 
     public static Object[][] join_matrix(Object[][] mat_smaller, Object[][] mat_bigger, String s, ArrayList<Nodes> nodearr) {
         System.out.println("join on " + s);
-        //System.out.println("printing s drom join_matrix " +s);
         ArrayList<String> col = new ArrayList<String>();// arrayList to hold the column names
         int rows = 1;
 
@@ -1151,14 +1073,13 @@ public class Ex1 {
         int col = mat_a[0].length; // the amount of columns in the given matrix
         int col1 = mat_a[0].length - 1; // the amount of column in the new matrix, 1 less
         boolean skip = false; // this bollen represents if we need to skip this column
-       // int skipping = 0;
+
         Object[][] new_mat = new Object[rows1][col1]; // creating the new mat
         // filling in the columns
         for (int i = 0; i < col1; i++) { // going through the columns
             if (!skip) {
                 if (mat_a[0][i].equals(s)) { // if we see the column we want to get rid of
                     skip = true;
-                    //skipping = i;
                     new_mat[0][i] = mat_a[0][i + 1]; // fill in the next value
                 } else {
                     new_mat[0][i] = mat_a[0][i]; // fill in this value
@@ -1202,7 +1123,6 @@ public class Ex1 {
             }
         }
         double sum = 0;
-        //	int count=0;
         String v = "";
         double percent = 0;
         ArrayList<String> val1 = new ArrayList<String>(); // contains the row truth values in the new matrix
