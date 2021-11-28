@@ -15,12 +15,7 @@ public class Ex1 {
 
         /*
         * add comments to
-        * bayesballdown1
-        * bayesballup1
-        * variable elimination
-        * create mat
         * join matrix
-        * eliminate matrix
          */
     }
 
@@ -267,9 +262,6 @@ public class Ex1 {
 
 
 
-
-
-
     public static String bayesBall(Nodes n1, Nodes n2, ArrayList<Nodes> evidence, ArrayList<Nodes> nodesarr) {
         String S1 = "yes";
         String S2 = "no";
@@ -335,13 +327,12 @@ public class Ex1 {
 
 
     public static void bayesBalldown1(Nodes n1, Nodes n2, ArrayList<Boolean> isdependent, boolean seenE, boolean hasBeenSeen) {
-        boolean breeaak = false; // we will use this when we find the node in the middle of loop
+        boolean breeaak = false; // we will use this when we find the node in the middle of loop and want to exit the loop
         if (n1.equals(n2)) {
             isdependent.add(true); // we found the node
         }
         if (n1.state != 2) {
             n1.setState(1);
-            //if(n1.kids.size()>=1) {
             for (int i = 0; i < n1.kids.size(); i++) {
                 // mark that we've finished with node
                 if (i == n1.kids.size() - 1) {
@@ -425,24 +416,21 @@ public class Ex1 {
                     }
                 }
             }
-            //}
         }
     }
 
 
     public static void bayesBallup1(Nodes n1, Nodes n2, ArrayList<Boolean> isdependent, boolean seenE, boolean hasBeenSeen) {
-        boolean breeaak = false;
-        if (n1.equals(n2)) {
+        boolean breeaak = false; // we will use this when we find the node in the middle of loop and want to exit the loop
+        if (n1.equals(n2)) { // we've found what we are looking for
             isdependent.add(true);
         }
 
         if (n1.state != 2) {
             n1.setState(1);
-            //if (n1.parents.size()>=1) {
             for (int i = 0; i < n1.parents.size(); i++) {
-                // mark that weve finished with nide
                 if (i == n1.parents.size() - 1) {
-                    n1.setState(2);
+                    n1.setState(2); // mark that we've finished with node
                 }
                 // what we are looking for
                 if (n1.parents.get(i).equals(n2)) {
@@ -463,11 +451,10 @@ public class Ex1 {
             }
             for (int i = 0; i < n1.kids.size(); i++) {
                 if (breeaak) {
-                    break;
+                    break; // if we have already got a true answer no need to continue looking
                 }
-                // mark that weve finished with nide
                 if (i == n1.kids.size() - 1) {
-                    n1.setState(2);
+                    n1.setState(2);  // mark that we've finished with node
                 }
                 // what we are looking for
                 if (n1.kids.get(i).equals(n2)) {
@@ -478,14 +465,11 @@ public class Ex1 {
                 if (n1.kids.get(i).seen != true) {
                     if (n1.kids.get(i).state != 2) {
                         seenE = false;
-                        ////
-                        ////
-                        ///changed up to down
+                        //changed up to down
                         bayesBalldown1(n1.kids.get(i), n2, isdependent, seenE, hasBeenSeen);
                     }
                 }
             }
-            //}
         }
     }
 
@@ -493,61 +477,59 @@ public class Ex1 {
     public static String variableElimination1(String s, String[] given, String[] hidden, ArrayList<Nodes> nodearr) {
 
         int count1 = 0;
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) { // find the name of the node that we are looking for and its percent
             count1 = count1 + 1;
             if (s.charAt(i) == '=') {
                 break;
             }
         }
-
+        System.out.println(s);
         String Qwry = s.substring(0, count1 - 1);
-        //System.out.println();
-        System.out.println("QWRY: " + Qwry);
+        String val=s.substring(count1);
+        System.out.println("QWRY: " + Qwry + " val:  "+ val); // print the name of that node
         //	System.out.println("main node:" +s);
         //	System.out.println("hidden: "+Arrays.toString(hidden));
         //	System.out.println("given: "+Arrays.toString(given));
         //	System.out.println();
 
-        int mult = 0;
-        int add = 0;
-        int div = 0;
-        ArrayList<Node_mat> mats = new ArrayList<Node_mat>();
-        ArrayList<String> del_later = new ArrayList<String>();
+        int mult = 0; // this variable will save the count of multiplications we do
+        int add = 0; // this variable will save the count of additions we do
+        int div = 0; // this is a variable that represents a number we will use when dividing by something
+        ArrayList<Node_mat> mats = new ArrayList<Node_mat>(); // this ArrayList will hold all the nodes of the matrices
+        ArrayList<String> del_later = new ArrayList<String>(); // this ArrayList will hold the names of the nodes that we don't need in any of the matrices
         for (int i = 0; i < nodearr.size(); i++) {
-            //String str=nodearr.get(i).getName();
-            Node_mat mat = create_mat(nodearr.get(i), nodearr, given, Qwry, del_later);
+            Node_mat mat = create_mat(nodearr.get(i), nodearr, given, Qwry, del_later); // creating the matrix
             if (mat != null) {
-                mats.add(mat);
+                mats.add(mat); // if the node+mat is null we don't want it
             }
         }
-        // deleting columns that contains nodes i dont need;
-        //for(int i=0;i<del_later.size();i++) {
-        while (del_later.size() >= 1) {
+        // deleting columns that contains nodes we don't need;
+        while (del_later.size() >= 1) { // going through the arraylist
             int size = del_later.size() - 1;
-            for (int j = 0; j < mats.size(); j++) {
-                for (int k = 0; k < mats.get(j).getMat()[0].length; k++) {
-                    if (mats.get(j).getMat()[0][k].equals(del_later.get(size))) {
-                        Node_mat mat1 = get_rid_of_cols(mats.get(j).getMat(), del_later.get(size));
-                        mats.remove(j);
+            for (int j = 0; j < mats.size(); j++) { // go through all the matrices in mats
+                for (int k = 0; k < mats.get(j).getMat()[0].length; k++) { // go through the columns of the mat
+                    if (mats.get(j).getMat()[0][k].equals(del_later.get(size))) { // if the column name is 1 we dont need
+                        Node_mat mat1 = get_rid_of_cols(mats.get(j).getMat(), del_later.get(size)); // we will create a new matrix without thwt column
+                        mats.remove(j); // remove the old matrix from mats
                         if (mat1 != null) {
-                            mats.add(mat1);
+                            mats.add(mat1); // if the new matrix ist null, add it to mats
                         }
                     }
                 }
             }
-            del_later.remove(size);
+            del_later.remove(size); // remove the node name at spot size form the ArrayList
         }
+        //printing all the mats
         System.out.println("printing all the mats");
         for (int i = 0; i < mats.size(); i++) {
             for (int j = 0; j < mats.get(i).mat.length; j++) {
                 System.out.println(Arrays.toString(mats.get(i).mat[j]));
             }
-
             System.out.println();
         }
-// if there is only 1 mat then we need to find the correct value and return it
+        // if there is only 1 mat then we need to find the correct value and return it
         if (mats.size() == 1) {
-            count1 = s.length();
+            count1 = s.length(); // find the truth value that we are looking for
             for (int i = s.length() - 1; i >= 0; i--) {
                 count1 = count1 - 1;
                 if (s.charAt(i) == '=') {
@@ -556,13 +538,13 @@ public class Ex1 {
             }
             double last = 0;
             Object[][] finale_mat = mats.get(0).getMat();
-            String val = s.substring(count1 + 1);
+           // String val = s.substring(count1 + 1);
             for (int i = 1; i < finale_mat.length; i++) {
-                if (finale_mat[i][0].equals(val)) {
+                if (finale_mat[i][0].equals(val)) { // find the value of the truth val in the mat, last=its percent
                     last = (Double) finale_mat[i][finale_mat[0].length - 1];
                 }
             }
-            String ans = last + "," + 0 + "," + 0;
+            String ans = last + "," + 0 + "," + 0; // we will return a string with its percent and 0,0 because we did 0 additions and 0 multiplications
             return ans;
         }
 
@@ -576,61 +558,66 @@ public class Ex1 {
 		 */
 
 
-        // after we have all the tables we need in the ArrayList,
+        // after we have all the tables we need in the ArrayList mats,
         // we will start to eliminate variables in order
-
-        ArrayList<Node_mat> hidden_mats = new ArrayList<Node_mat>();
+        ArrayList<Node_mat> hidden_mats = new ArrayList<Node_mat>();// this array list will hold all the nome_mats that have the variable we are now eliminating
         // going through mats and putting all the mats that contain a hidden together in a ArrayList
         // so that i can start the joining.
-        Node_mat.Node_mat_Comparator comp = new Node_mat.Node_mat_Comparator();
+        Node_mat.Node_mat_Comparator comp = new Node_mat.Node_mat_Comparator(); // we will use this comparator to decide the order of joining matrices
         int count = 0;
-        for (int k = 0; k < hidden.length; k++) {
-            hidden_mats.clear();
-            count = 0;
-            for (int i = 0; i < mats.size(); i++) {
-                for (int l = 0; l < mats.get(i).mat[0].length; l++) {
-                    if (mats.get(i).mat[0][l].equals(hidden[k])) {
-                        hidden_mats.add(mats.get(i));
-                        count = count + 1;
+        for (int k = 0; k < hidden.length; k++) { // go through the array of the names of nodes we need to eliminate
+            hidden_mats.clear(); // we will clear the arrayList, because we are now adding new values and dont need the pld ones
+           // count = 0;
+            for (int i = 0; i < mats.size(); i++) { // go through the ArrayList mats
+                for (int l = 0; l < mats.get(i).mat[0].length; l++) { // go through the column names of the matrix
+                    if (mats.get(i).mat[0][l].equals(hidden[k])) { // if the column name equals the name of the variable we are looking for
+                        hidden_mats.add(mats.get(i)); // we will add the node_mat to the hidden_mat Arraylist
+                      //  count = count + 1;
                     }
                 }
             }
             boolean removed = false;
-
-            for (int i = mats.size() - 1; i >= 0; i--) {
+            for (int i = mats.size() - 1; i >= 0; i--) { // going through the mats arraylist and removing the mats that we put in the hidden_mats ArrayList
                 removed = false;
-                for (int l = 0; !removed && l < mats.get(i).mat[0].length; l++) {
+                for (int l = 0; !removed && l < mats.get(i).mat[0].length; l++) { // go through the columns of the matrix if we haven't changed the boolean removed to false
                     if (mats.get(i).mat[0][l].equals(hidden[k])) {
-                        mats.remove(mats.get(i));
-                        removed = true;
+                        mats.remove(mats.get(i)); // if we found the column name that eaquals the node name that we rae looking for  we will remove the node_mat
+                        removed = true; // and change the boolean toi true
                     }
                 }
             }
 
-            while (hidden_mats.size() > 1) {
-                Collections.sort(hidden_mats, comp);
-                Object[][] mat_new = join_matrix(hidden_mats.get(0).getMat(), hidden_mats.get(1).getMat(), hidden[k], nodearr);
-                Node_mat n = new Node_mat(mat_new);
-                mult = mult + (n.getRows() - 1);
-                hidden_mats.remove(1);
-                hidden_mats.remove(0);
-                hidden_mats.add(n);
+            while (hidden_mats.size() > 1) { // if the size is bigger than 1 than we have at least 2 matrices
+                Collections.sort(hidden_mats, comp); // sort the matrices
+                Object[][] mat_new = join_matrix(hidden_mats.get(0).getMat(), hidden_mats.get(1).getMat(), hidden[k], nodearr); // join the first 2
+                Node_mat n = new Node_mat(mat_new); //create a new node_mat
+                mult = mult + (n.getRows() - 1); // add the amount of multiplication we did to the multiplication counter
+                hidden_mats.remove(1); // remove tha node_mat from the arrayList because we don't need it anymore
+                hidden_mats.remove(0); // same
+                hidden_mats.add(n); // add the new node_mat to the arrayList
 
             }
-            if (hidden_mats.size() > 0) {
-                for (int i = 0; i < nodearr.size(); i++) {
-                    if (nodearr.get(i).getName().equals(hidden[k])) {
-                        div = nodearr.get(i).outcomes.size();
+            if (hidden_mats.size() > 0) { // if the size is bigger than 0 then there is 1 matrix in the array list
+                for (int i = 0; i < nodearr.size(); i++) { // go through the arrayList of nodes
+                    if (nodearr.get(i).getName().equals(hidden[k])) { // find the node that we are eliminating by
+                        div = nodearr.get(i).outcomes.size(); // div= the amount of outcomes the node has
                     }
                 }
-                Object[][] m = eliminate_matrix(hidden_mats.get(0).getMat(), hidden[k], div, nodearr);
-                Node_mat n = new Node_mat(m);
-                mats.add(n);
-                add = add + (((hidden_mats.get(0).getRows()) / div) * (div - 1));
+                Object[][] m = eliminate_matrix(hidden_mats.get(0).getMat(), hidden[k], div, nodearr); // eliminating the node
+                Node_mat n = new Node_mat(m); // creating a newn ode_mat
+                mats.add(n); // adding the new node_mat to the arrayList mats
+                add = add + (((hidden_mats.get(0).getRows()-1) / div) * (div - 1)); // adding the amount of addition we did to the addition counter
+                // to count the amount of addition you did you take the rows fom the matrix-1(that's the 'column name' row)
+                // and divide by the amount of outcomes the node you are eliminating has
+                // than you take that number and times by the amount of outcomes-1,
+                // that because when you add x numbers together you use x-1 addition signs
             }
         }
         //System.out.println("mult=" + mult + " add= " +add +"\n"+ mats);
 
+
+
+        /*
         String v = "";
         count = 0;
         for (int i = 0; i < s.length(); i++) {
@@ -640,27 +627,30 @@ public class Ex1 {
             }
         }
         v = s.substring(0, count - 1);
-
-        while (mats.size() > 1) {
-            Collections.sort(mats, comp);
-            Object[][] new_mat = join_matrix(mats.get(0).getMat(), mats.get(1).getMat(), v, nodearr);
-            mult = mult + mats.get(1).getRows() - 1;
-            mats.remove(1);
-            mats.remove(0);
-            Node_mat new_mat1 = new Node_mat(new_mat);
-            mats.add(new_mat1);
+*/
+        // we have eliminated all the hidden values
+        while (mats.size() > 1) { // if mats has more than 1 mat on i we need to join by the qwry node
+            Collections.sort(mats, comp); // sort the arrayList
+            Object[][] new_mat = join_matrix(mats.get(0).getMat(), mats.get(1).getMat(), Qwry, nodearr); // join
+            mult = mult + mats.get(1).getRows() - 1; // add the amount of multiplication we did to the multiplication counter
+            mats.remove(1); // remove the mat
+            mats.remove(0); // same
+            Node_mat new_mat1 = new Node_mat(new_mat); // create a new node_mat
+            mats.add(new_mat1); // add it to mats
         }
 
-        Object[][] finale_mat = mats.get(0).getMat();
+        Object[][] finale_mat = mats.get(0).getMat(); // this is the finale mat
 
-        double last = 0;
-        for (int i = 1; i < finale_mat.length; i++) {
-            last = last + (Double) finale_mat[i][finale_mat[0].length - 1];
-            add = add + 1;
+        // normalizing the answer
+        double last = 0; // this will be the percent value that we will return
+        for (int i = 1; i < finale_mat.length; i++) { // go through the matrix
+            last = last + (Double) finale_mat[i][finale_mat[0].length - 1]; // add all the percent to the together
+            add = add + 1; // eavh time we do this we need to bring the count uo by
         }
-        add = add - 1;
-        last = 1.0 / last;
+        add = add - 1; // lower the count by 1 because we counted it too many times
+        last = 1.0 / last; // take 1.0 and divide by last so that we get are normalizer
 
+/*
         count1 = s.length();
         for (int i = s.length() - 1; i >= 0; i--) {
             count1 = count1 - 1;
@@ -668,19 +658,23 @@ public class Ex1 {
                 break;
             }
         }
-        String val = s.substring(count1 + 1);
+        //String val = s.substring(count1 + 1);
+         //val = s.substring(count1 + 1);
+
         //	System.out.println("val: " + val);
+        */
+
 
         for (int i = 1; i < finale_mat.length; i++) {
-            if (finale_mat[i][0].equals(val)) {
-                last = last * (Double) finale_mat[i][finale_mat[0].length - 1];
+            if (finale_mat[i][0].equals(val)) { // go through the mats row to find the value we are looking for
+                last = last * (Double) finale_mat[i][finale_mat[0].length - 1]; //and times it by the normalizer
             }
         }
-        last = (double) Math.round(last * 100000d) / 100000d;
+        last = (double) Math.round(last * 100000d) / 100000d; // round the number to 5 spots after the decimal point
         //System.out.println(last);
         System.out.println("mult=" + mult + " add= " + add + " final ans: " + last);
         System.out.println();
-        String ans = last + "," + add + "," + mult;
+        String ans = last + "," + add + "," + mult; // we will return a string with its percent and addition and multiplication counters
         return ans;
     }
 
@@ -691,32 +685,32 @@ public class Ex1 {
         String s1;
         String s2;
 
-        ArrayList<String> givs = new ArrayList<String>();
-        if (given[0] != " ") {
+        ArrayList<String> givs = new ArrayList<String>(); // arrayList of all the names and truth values of the given nodes;
+        if (given[0] != " ") { // if the first value is " " there are no given nodes
             for (int i = 0; i < given.length; i++) {
                 count1 = 0;
-                for (int j = 0; j < given[i].length(); j++) {
+                for (int j = 0; j < given[i].length(); j++) { // go through the string that contains the node name and its vales
                     if (given[i].charAt(j) == '=') {
                         break;
                     }
                     count1 = count1 + 1;
                 }
-                s1 = given[i].substring(0, count1);
-                s2 = given[i].substring(count1 + 1);
-                givs.add(s1);
-                givs.add(s2);
+                s1 = given[i].substring(0, count1); // this is the node name
+                s2 = given[i].substring(count1 + 1); // this is its value
+                givs.add(s1); // add to the arrayList
+                givs.add(s2); // add to the arrayList
             }
         }
-        ArrayList<Nodes> given_nodes = new ArrayList<Nodes>();
+        ArrayList<Nodes> given_nodes = new ArrayList<Nodes>(); // create an arraylist of the given nodes
         for (int j = 0; j < nodearr.size(); j++) {
-            for (int k = 0; k < givs.size(); k = k + 2) {
+            for (int k = 0; k < givs.size(); k = k + 2) { // gp through the givs arrayList to compare the nodes to ro see if we need them in this Arraylist
                 if (nodearr.get(j).getName().equals(givs.get(k))) {
                     given_nodes.add(nodearr.get(j));
                 }
             }
         }
 
-        boolean is_Q_or_g = false;
+        boolean is_Q_or_g = false; // is the node the qwry node or a given node
         if (node.getName().equals(Qwry)) {
             is_Q_or_g = true;
         }
@@ -726,57 +720,55 @@ public class Ex1 {
             }
         }
 
-        Nodes n1;
-        ArrayList<Boolean> ancestory = new ArrayList<Boolean>();
+        Nodes n1; // declaring a variable
+        ArrayList<Boolean> ancestory = new ArrayList<Boolean>(); // this arrayList will hold the answer to if the node is an ancestor to the qwry or given
         String isIndependent = "";
         boolean isAncestor = false;
-        if (!is_Q_or_g) {
+        if (!is_Q_or_g) { // if the node isn't the qwry or a given node
             for (int j = 0; j < nodearr.size(); j++) {
-                if (nodearr.get(j).getName().equals(Qwry)) {
+                if (nodearr.get(j).getName().equals(Qwry)) { // if the node is the qwry
                     n1 = nodearr.get(j);
                     // is the node an ancestor of qwry
-                    isAncestor = ancestor(n1, node, nodearr);
+                    isAncestor = ancestor(n1, node, nodearr); // we will chck if it is an ansetor of the qwry node
                     //System.out.println(node.name+ " is a ancetor of "+ Qwry+" : " +isAncestor );
-                    ancestory.add(isAncestor);
-                    isIndependent = bayesBall(node, n1, given_nodes, nodearr);
+                    ancestory.add(isAncestor); // and add the answer to the arrayList
+                    isIndependent = bayesBall(node, n1, given_nodes, nodearr); // we will check if the node is dependent on the qwry with bayesball
                     //System.out.println("is " +Qwry + " isIndependent: form "+node.getName()+ "? "+isIndependent);
                 } else {
                     // is node an ancestor of given
-                    for (int k = 0; k < givs.size(); k = k + 2) {
-                        if (nodearr.get(j).getName().equals(givs.get(k))) {
+                    for (int k = 0; k < givs.size(); k = k + 2) { // if the node isn't the qwry
+                        if (nodearr.get(j).getName().equals(givs.get(k))) { // if the node is given
                             n1 = nodearr.get(j);
-                            isAncestor = ancestor(n1, node, nodearr);
+                            isAncestor = ancestor(n1, node, nodearr); // is the node an ansestor of the given node
                             //System.out.println(node.name+ " is a ancetor of "+ givs.get(k)+" : " +isAncestor );
-                            ancestory.add(isAncestor);
+                            ancestory.add(isAncestor); // add the answer to the arrayList
                         }
                     }
                 }
-
-                //isIndependent=bayesBall(n1,node,arr,nodearr);
                 //System.out.println("is " +Qwry + " isIndependent: form "+node.getName()+ "? "+isIndependent);
             }
         }
         isAncestor = false;
-        for (int i = 0; i < ancestory.size(); i++) {
+        for (int i = 0; i < ancestory.size(); i++) { // go through the arrayList of answers , if the node is an ancestor of the given or qwry
             if (ancestory.get(i).equals(true)) {
-                isAncestor = true;
+                isAncestor = true; // change the boolean isAncestor to true
             }
         }
 
-        if (is_Q_or_g || (isAncestor && isIndependent.equals("no"))) {
+        if (is_Q_or_g || (isAncestor && isIndependent.equals("no"))) { // the node is a (qwry or given node) or(a ancestor and is dependent on the qwry)
 
             int outcomes_spot = 0;
             int num = 1;
             //int count1=0;
-            int rows = node.percents.size() + 1;
-            int columns = 2 + node.parents.size();
-            int fill_in_rows = rows - 1;
-            boolean redo = true;
+            int rows = node.percents.size() + 1; // we need 1 row for each percent and a row for the column names
+            int columns = 2 + node.parents.size(); // we need a row fore each parent, the node itself and for the percents
+            int fill_in_rows = rows - 1; // we need to fill in the percent values this variable will help us keep track how many to fill in as a certain type
+        //    boolean redo = true;
 
 
-            Object[][] mat = new Object[rows][columns];
-            mat[0][columns - 2] = node.name;
-            mat[0][columns - 1] = "p(...)";
+            Object[][] mat = new Object[rows][columns]; // creating the mat
+            mat[0][columns - 2] = node.name; // filling the column name for this node
+            mat[0][columns - 1] = "p(...)"; // filling in the column name for the percents
 
             //filling in the percents
             for (int i = 1; i < rows; i++) {
@@ -798,7 +790,14 @@ public class Ex1 {
 			}
 			 */
             columns = mat[0].length;
-            //filling in the truth values
+            /*
+            filling in the truth values
+            we will start filling in the truth values starting wih the left most column,
+            we will take the fill_in_rows var and divide by the amount of outcomes this column's node has
+            we will start with the first outcome and each time we add it in we will bring up the counter by 1
+            once the counter equals the var fill_in_rows we will reset the counter to 0, and start filling in the next node outcome,
+            if we finished the nodes last outcome and there are more rows we will repeat the process
+             */
             for (int i = 0; i < columns - 1; i++) {
                 String s = String.valueOf(mat[0][i]);
                 count1 = 0;
@@ -825,14 +824,19 @@ public class Ex1 {
                     }
                 }
             }
-            // getting rid if the rows and columns of given var
+            /*
+            getting rid of the rows and columns of given var
 
+            we will go through the givs Arraylist ans see if the column names is the sane as the givs,
+            if so we will get rid of the rows that contain an outcome that isnt given,
+            and get rid of the column of that node and create a new matrix,
+            if the matrix that was created is null we wil return null
+             */
             boolean change = false;
             String first = "";
             int col = 0;
             for (int i = 0; i < givs.size(); i = i + 2) {
                 change = false;
-
                 for (int j = 0; mat != null && j < mat[0].length; j++) {
                     if (mat[0][j].equals(givs.get(i))) {
                         change = true;
@@ -867,8 +871,6 @@ public class Ex1 {
                     }
                 }
             }
-
-
             if (mat != null) {
                 for (int i = 0; i < mat.length; i++) {
                     //System.out.println(Arrays.toString(mat[i]));
@@ -879,8 +881,9 @@ public class Ex1 {
             } else {
                 return null;
             }
-        } else {
-            del_later.add(node.name);
+        } else { // we didnt create a mat for this node
+            del_later.add(node.name); // we will add the nodes name to this array list
+            // so that later we can get rid of the columns with this nodes name from other matrices
             return null;
         }
     }
@@ -985,41 +988,45 @@ public class Ex1 {
     public static Object[][] join_matrix(Object[][] mat_smaller, Object[][] mat_bigger, String s, ArrayList<Nodes> nodearr) {
         System.out.println("join on " + s);
         //System.out.println("printing s drom join_matrix " +s);
-        ArrayList<String> col = new ArrayList<String>();
-        //ArrayList<Double> outs=new ArrayList<Double>();
-        //int rows_small=mat_smaller.length;
-        //int rows_big=mat_bigger.length;
+        ArrayList<String> col = new ArrayList<String>();// arrayList to hold the column names
         int rows = 1;
 
 
-        // adding column names to col ArrayList
+        // adding column names from the bigger matrix not including the column name we are joining on and the percent column name to col ArrayList
         for (int i = 0; i < mat_bigger[0].length - 1; i++) {
             if (!col.contains(mat_bigger[0][i])) {
                 col.add((String) mat_bigger[0][i]);
             }
         }
-        // adding column names to col ArrayList if arent there
+        // adding column names to col ArrayList if aren't there
         for (int i = 0; i < mat_smaller[0].length; i++) {
             if (!col.contains(mat_smaller[0][i])) {
                 col.add((String) mat_smaller[0][i]);
             }
         }
         // finding the amount of rows needed;
-        for (int i = 0; i < col.size() - 1; i++) {
-            for (int j = 0; j < nodearr.size(); j++) {
-                if (nodearr.get(j).name.equals(col.get(i))) {
-                    rows = rows * nodearr.get(j).outcomes.size();
+        for (int i = 0; i < col.size() - 1; i++) { // going through the col arrayList
+            for (int j = 0; j < nodearr.size(); j++) { // going through the node arrayList
+                if (nodearr.get(j).name.equals(col.get(i))) { // finding the matchers
+                    rows = rows * nodearr.get(j).outcomes.size(); // rows = rows* the amount of outcomes the node has
                 }
             }
         }
-        rows = rows + 1;
+        rows = rows + 1; // add 1 more row for the column names
 
         // putting column names in new mat
         Object[][] new_mat = new Object[rows][col.size()];
         for (int i = 0; i < col.size(); i++) {
             new_mat[0][i] = col.get(i);
         }
-        // putting truth value in new mat
+       /*
+            filling in the truth values
+            we will start filling in the truth values starting wih the left most column,
+            we will take the fill_in_rows var and divide by the amount of outcomes this column's node has
+            we will start with the first outcome and each time we add it in we will bring up the counter by 1
+            once the counter equals the var fill_in_rows we will reset the counter to 0, and start filling in the next node outcome,
+            if we finished the nodes last outcome and there are more rows we will repeat the process
+             */
         int fill_in_rows = rows - 1;
         for (int i = 0; i < new_mat[0].length - 1; i++) {
             String st = (String) new_mat[0][i];
@@ -1030,7 +1037,6 @@ public class Ex1 {
                     int outcomes_spot = 0;
                     fill_in_rows = fill_in_rows / num;
                     for (int j = 1; j < rows; j++) {
-                        //if(count1<((rows-1)/Math.pow(num, i+1))) {
                         if (count1 < fill_in_rows) {
                             new_mat[j][i] = nodearr.get(n).outcomes.get(outcomes_spot);
                             count1 = count1 + 1;
@@ -1049,10 +1055,19 @@ public class Ex1 {
             }
         }
         // putting in percents
-        ArrayList<Integer> col_small_in_new = new ArrayList<Integer>();
-        ArrayList<Integer> col_big = new ArrayList<Integer>();
-        ArrayList<Integer> col_small = new ArrayList<Integer>();
-
+        ArrayList<Integer> col_small_in_new = new ArrayList<Integer>(); // the truth values spots from the small matrix in the new matrix
+        ArrayList<Integer> col_big = new ArrayList<Integer>(); // the truth values spots from the big matrix in the new matrix= same as in the big matrix
+        ArrayList<Integer> col_small = new ArrayList<Integer>(); // the truth values spots from the small matrix in the small matrix
+        ArrayList<String> truth_val_row = new ArrayList<String>(); // this arrayList will hold the truth values of the row we rae filling
+        boolean added = false;
+        boolean wrong = false;
+        /*
+        we will go through the rows columns of the new matrix,
+        we will add the values of the relevant columns to all the arrayList listed above
+        we will add the the truth vals of the row into the arrayList
+        we will find the correct row in the big matrix and put the percent into the new mat
+        we will find the correct row in the smaller matrix and take the value from the big matrix and times them together and put into the new matrix
+        */
         for (int i = 0; i < new_mat[0].length - 1; i++) {//columns
             for (int j = 0; j < mat_bigger[0].length - 1; j++) { // columns
                 if (new_mat[0][i].equals(mat_bigger[0][j])) {
@@ -1073,11 +1088,7 @@ public class Ex1 {
                 }
             }
         }
-
-
-        ArrayList<String> truth_val_row = new ArrayList<String>();
-        boolean added = false;
-        boolean wrong = false;
+        // adding the percent from the bigger matrix
         for (int i = 1; i < new_mat.length; i++) { //rows
             truth_val_row.clear();
             for (int j = 0; j < col_big.size(); j++) {
@@ -1097,7 +1108,7 @@ public class Ex1 {
                 }
             }
         }
-        // if added cols in different order we get a problem
+        // adding the percent from the smaller mat
         for (int i = 1; i < new_mat.length; i++) { //rows
             truth_val_row.clear();
             for (int j = 0; j < col_small_in_new.size(); j++) {
@@ -1134,28 +1145,36 @@ public class Ex1 {
 
     public static Object[][] eliminate_matrix(Object[][] mat_a, String s, int div, ArrayList<Nodes> nodearr) {
         System.out.println("eliminate " + s);
-        int rows = mat_a.length;
-        int rows1 = ((rows - 1) / div) + 1;
-        int col = mat_a[0].length;
-        int col1 = mat_a[0].length - 1;
-        boolean skip = false;
-        int skipping = 0;
-        Object[][] new_mat = new Object[rows1][col1];
+        int rows = mat_a.length; // the amount of rows in the given matrix
+        int rows1 = ((rows - 1) / div) + 1; // the amount of rows in the new matrix,
+        // taking the rows in the given matrix-1 and dividing by the amount of outcomes the node we are eliminating by has then adding 1.
+        int col = mat_a[0].length; // the amount of columns in the given matrix
+        int col1 = mat_a[0].length - 1; // the amount of column in the new matrix, 1 less
+        boolean skip = false; // this bollen represents if we need to skip this column
+       // int skipping = 0;
+        Object[][] new_mat = new Object[rows1][col1]; // creating the new mat
         // filling in the columns
-        for (int i = 0; i < col1; i++) {
+        for (int i = 0; i < col1; i++) { // going through the columns
             if (!skip) {
-                if (mat_a[0][i].equals(s)) {
+                if (mat_a[0][i].equals(s)) { // if we see the column we want to get rid of
                     skip = true;
-                    skipping = i;
-                    new_mat[0][i] = mat_a[0][i + 1];
+                    //skipping = i;
+                    new_mat[0][i] = mat_a[0][i + 1]; // fill in the next value
                 } else {
-                    new_mat[0][i] = mat_a[0][i];
+                    new_mat[0][i] = mat_a[0][i]; // fill in this value
                 }
             } else {
-                new_mat[0][i] = mat_a[0][i + 1];
+                new_mat[0][i] = mat_a[0][i + 1]; // fill in the next value
             }
         }
-        //filling in the truth values
+         /*
+            filling in the truth values
+            we will start filling in the truth values starting wih the left most column,
+            we will take the fill_in_rows var and divide by the amount of outcomes this column's node has
+            we will start with the first outcome and each time we add it in we will bring up the counter by 1
+            once the counter equals the var fill_in_rows we will reset the counter to 0, and start filling in the next node outcome,
+            if we finished the nodes last outcome and there are more rows we will repeat the process
+             */
         int fill_in_rows = rows1 - 1;
         for (int i = 0; i < col1 - 1; i++) {
             String s1 = String.valueOf(new_mat[0][i]);
@@ -1177,7 +1196,6 @@ public class Ex1 {
                             }
                             new_mat[j][i] = nodearr.get(n).outcomes.get(outcomes_spot);
                             count1 = count1 + 1;
-                            ;
                         }
                     }
                 }
@@ -1187,8 +1205,17 @@ public class Ex1 {
         //	int count=0;
         String v = "";
         double percent = 0;
-        ArrayList<String> val1 = new ArrayList<String>();
-        ArrayList<String> val2 = new ArrayList<String>();
+        ArrayList<String> val1 = new ArrayList<String>(); // contains the row truth values in the new matrix
+        ArrayList<String> val2 = new ArrayList<String>(); // contains the row truth values from the old matrix without the column we wnt to eliminate
+        /*
+        go through the rows in the new matrix
+        add the column's truth values to val1 arrayList
+        go through the rows in the old matrix
+        add the column's truth values to val2 arrayList if it isn't for the value we want to eliminate
+        if val1 equals val2, var percent equals that rows percent
+        var sum will contain the sum of all the percents
+        put the var sum in the new matrix
+         */
         for (int i = 1; i < new_mat.length; i++) { // needs to be row
             val1.clear();
             for (int j = 0; j < new_mat[0].length - 1; j++) { // needs to be column
