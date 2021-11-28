@@ -49,7 +49,7 @@ public class Node_mat {
 
 
     public static class Node_mat_Comparator implements Comparator<Node_mat> {
-
+    // ths comparator will compare the rows and then by the ascii value
         @Override
         public int compare(Node_mat a, Node_mat b) {
             if (a.rows==b.rows) {
