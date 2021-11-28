@@ -62,8 +62,6 @@ public class Ex1 {
                             }
                             s2 = s1.substring(2, count);
                             s1 = s1.substring(count + 1);
-                            //	System.out.println( "s2: " +s2);
-                            //	System.out.println("s1: "+s1);
                             count = 0;
                             for (int i = 0; i < s1.length(); i++) {
                                 if (s1.charAt(i) == ')') {
@@ -80,10 +78,6 @@ public class Ex1 {
                             if (s4.length() > 1) {
                                 hidden = s4.split("-");
                             }
-                            // System.out.println("given: "+s3);
-                            // System.out.println("hidden: "+s4);
-                            // System.out.println("hidden: "+Arrays.toString(hidden));
-                            // System.out.println("given: " +Arrays.toString(given));
 
                             // running the function to find the answer to the question
                             String ans = variableElimination1(s2, given, hidden, nodearr);
@@ -139,19 +133,15 @@ public class Ex1 {
                             if (arr1[0] != " ") {
                                 for (int i = 0; i < arr1.length; i++) {
                                     for (int j = 0; j < nodearr.size(); j++) {
-                                        //  s4=" ";
                                         s4 = String.valueOf(arr1[i].charAt(0));
                                         boolean seen_end = false;
                                         for (int k = 1; k < arr1[i].length() && !seen_end; k++) {
-                                            //System.out.println(arr1[i].charAt(k));
                                             if (arr1[i].charAt(k) != '=') {
-                                                //System.out.println(arr1[i].charAt(k));
                                                 s4 += String.valueOf(arr1[i].charAt(k));
                                             } else {
                                                 seen_end = true;
                                             }
                                         }
-                                        //System.out.println("s4="+s4);
                                         if (s4.equals(nodearr.get(j).name)) {
                                             evidence.add(nodearr.get(j));
                                         }
@@ -268,6 +258,7 @@ public class Ex1 {
         for (int i = 0; i < nodearr.size(); i++) {
             System.out.println(nodearr.get(i));
         }
+        System.out.println();
         return nodearr;
     }
 
@@ -492,10 +483,10 @@ public class Ex1 {
                 break;
             }
         }
-        System.out.println(s);
+      //  System.out.println(s);
         String Qwry = s.substring(0, count1 - 1);
         String val=s.substring(count1);
-        System.out.println("QWRY: " + Qwry + " val:  "+ val); // print the name of that node
+      //  System.out.println("QWRY: " + Qwry + " val:  "+ val); // print the name of that node
 
 
         int mult = 0; // this variable will save the count of multiplications we do
@@ -525,6 +516,7 @@ public class Ex1 {
             }
             del_later.remove(size); // remove the node name at spot size form the ArrayList
         }
+        /*
         //printing all the mats
         System.out.println("printing all the mats");
         for (int i = 0; i < mats.size(); i++) {
@@ -533,6 +525,7 @@ public class Ex1 {
             }
             System.out.println();
         }
+        */
         // if there is only 1 mat then we need to find the correct value and return it
         if (mats.size() == 1) {
             count1 = s.length(); // find the truth value that we are looking for
@@ -924,10 +917,9 @@ public class Ex1 {
 
 
     public static Object[][] join_matrix(Object[][] mat_smaller, Object[][] mat_bigger, String s, ArrayList<Nodes> nodearr) {
-        System.out.println("join on " + s);
+       // System.out.println("join on " + s);
         ArrayList<String> col = new ArrayList<String>();// arrayList to hold the column names
         int rows = 1;
-
 
         // adding column names from the bigger matrix not including the column name we are joining on and the percent column name to col ArrayList
         for (int i = 0; i < mat_bigger[0].length - 1; i++) {
@@ -1070,18 +1062,19 @@ public class Ex1 {
                 }
             }
         }
-
+/*
         System.out.println("printing mat after join");
         for (int i = 0; i < new_mat.length; i++) {
             System.out.println(Arrays.toString(new_mat[i]));
         }
         System.out.println();
+ */
         return new_mat;
     }
 
 
     public static Object[][] eliminate_matrix(Object[][] mat_a, String s, int div, ArrayList<Nodes> nodearr) {
-        System.out.println("eliminate " + s);
+     //   System.out.println("eliminate " + s);
         int rows = mat_a.length; // the amount of rows in the given matrix
         int rows1 = ((rows - 1) / div) + 1; // the amount of rows in the new matrix,
         // taking the rows in the given matrix-1 and dividing by the amount of outcomes the node we are eliminating by has then adding 1.
@@ -1173,11 +1166,13 @@ public class Ex1 {
             }
             new_mat[i][col1 - 1] = sum;
         }
+        /*
         System.out.println("printing mat after elimination");
         for (int i = 0; i < new_mat.length; i++) {
             System.out.println(Arrays.toString(new_mat[i]));
         }
         System.out.println();
+         */
         return new_mat;
     }
 
